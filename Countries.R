@@ -9,7 +9,7 @@ library(patchwork)
 class.colors <- c("red", "orange", "yellow", "green", "blue", "purple")
 
 # Plot density for feature "colname" with values from "raw_data"
-plot.density <- function(classes, raw_data, colname) {
+PlotDensity <- function(classes, raw_data, colname) {
   density <- ggplot(raw_data, aes_string(x = colname, colour = as.factor(classes))) +
     geom_density() +
     scale_color_manual(values = class.colors)
@@ -17,9 +17,13 @@ plot.density <- function(classes, raw_data, colname) {
 }
 
 # Plot world map 
-plot.world <- function(world_geom, class_data, merge_by = "region") {
+PlotWorld <- function(world_geom, classes, merge_by = "region") {
+  # Join classes with country names
+  d<- classes
+  d$region <- Country_data$country
+  
   # Join country geometric data with classes
-  d <- merge(world_geom, class_data, by = merge_by)
+  d <- merge(world_geom, d, by = merge_by)
   d <- d[order(d$order, decreasing = FALSE), ]
   
   map <- ggplot(data = d, mapping = aes(x = long, y = lat, group = group)) +
@@ -31,15 +35,8 @@ plot.world <- function(world_geom, class_data, merge_by = "region") {
   return(map)
 }
 
-# Plot map and density 
-plot.model.map <- function(classes) {
-  cluster.data <- classes
-  cluster.data$region <- Country_data$country
-  return(plot.world(map_data("world"), cluster.data, "region"))
-}
-
 # Plot all solutions
-plot.solutions <- function(raw_data, out, sol) {
+PlotSolutions <- function(raw_data, out, sol) {
   for (i in 1:nrow(sol$MIXMIXbs))
   {
     k <- paste("k=", sol$MIXMIXbs[i, 1], sep = '')
@@ -47,7 +44,7 @@ plot.solutions <- function(raw_data, out, sol) {
     classes <- as.data.frame(out$IDXMIX[k, c])
     colnames(classes)[1] <- "class"
     
-    map.plot <- plot.model.map(classes)
+    map.plot<-PlotWorld(map_data("world"), classes, "region")
     
     densities.plot <- plot.density(classes$class, raw_data, names(raw_data)[1])
     for (j in 2:ncol(raw_data))
@@ -84,13 +81,13 @@ sol <- tclustICsol(out, NumberOfBestSolutions = 2, plot = TRUE, whichIC = 'MIXMI
 # Not what we wanted. For example solution 1 puts countries like Russia and China together with African countries.
 # Those countries have on average low income, gdpp and life expectancy, therefore those two are definetly not belonging in this group.
 # Moreover from the scatter plots we see that one cluster is elongated and sparse on some axes.
-plot.solutions(data, out, sol)
+PlotSolutions(data, out, sol)
 
 # Try with lower maximum cc values.
 out <- tclustIC(data.pca, whichIC = 'MIXMIX', plot = TRUE, cc = c(1, 2, 3, 4, 5, 6, 7))
 sol <- tclustICsol(out, NumberOfBestSolutions = 2, plot = TRUE, whichIC = 'MIXMIX')
 
-plot.solutions(data, out, sol)
+PlotSolutions(data, out, sol)
 
 # The scatter plots show better cluster shapes with less elongated and sparse clusters.
 # For solution 1 from the density plots we can see that he three groups have the following characteristics:
