@@ -35,6 +35,7 @@ cov(data.numeric)
 # High correlation between body_mass_g and flipper_length_mm
 corrplot(cor(data.numeric), method = 'color')
 
+# Groups are well separated, so the procedure should work well
 ggpairs(data.numeric, aes(color = data.full$species), upper = list(continuous = 'points'),legend=1) +
   theme(legend.position = 'top') +
   labs(fill="Species")
@@ -48,7 +49,7 @@ ggpairs(data.pca, aes(color = data.full$species), upper = list(continuous = 'poi
   theme(legend.position = 'top') +
   labs(fill="Species")
 
-# K selection algorithms, best solution has 3 components which coincide with real species
+# The best solution has 3 components which coincide with real species
 out <- tclustIC( data.pca, numpool = 16, plot = TRUE, whichIC = "MIXMIX", kk = 1:5 )
 sol <- tclustICsol( out, plot = TRUE, Rand = TRUE, NumberOfBestSolutions = 3, whichIC = "MIXMIX")
 
