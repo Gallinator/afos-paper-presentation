@@ -40,7 +40,7 @@ data.pca <- prcomp(data.numeric, scale = TRUE)
 summary(data.pca)
 data.pca <- data.pca$x[, 1:3]
 
-ggpairs(data.numeric, aes(color = data.full$species), upper = list(continuous = 'points'),legend=1) +
+ggpairs(data.pca, aes(color = data.full$species), upper = list(continuous = 'points'),legend=1) +
   theme(legend.position = 'top') +
   labs(fill="Species")
 
