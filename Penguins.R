@@ -40,7 +40,9 @@ data.pca <- prcomp(data.numeric, scale = TRUE)
 summary(data.pca)
 data.pca <- data.pca$x[, 1:3]
 
-ggpairs(as.data.frame(data.pca), aes(color = data.full$species), upper = list(continuous = 'points'))
+ggpairs(data.numeric, aes(color = data.full$species), upper = list(continuous = 'points'),legend=1) +
+  theme(legend.position = 'top') +
+  labs(fill="Species")
 
 # K selection algorithms, best solution has 3 components which coincide with real species
 out <- tclustIC( data.pca, numpool = 16, plot = TRUE, whichIC = "MIXMIX", kk = 1:5 )
