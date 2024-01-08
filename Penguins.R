@@ -4,7 +4,7 @@ library(GGally)
 library(corrplot)
 
 # Plot densities for each solution
-PlotSolutions<-function(raw_data,out,sol){
+PlotSolutions <- function(raw_data, out, sol) {
   for (i in 1:nrow(sol$MIXMIXbs))
   {
     k <- paste("k=", sol$MIXMIXbs[i, 1], sep = '')
@@ -12,19 +12,24 @@ PlotSolutions<-function(raw_data,out,sol){
     classes <- as.data.frame(out$IDXMIX[k, c])
     colnames(classes)[1] <- "class"
     
-    plot<-ggpairs((raw_data),aes(color=as.factor(classes$class)),upper = list(continuous = 'points'),legend=1)+
-      theme(legend.position = 'top') +
-      labs(fill="Species")
+    plot.title <- paste("Solution", i, k, c)
+    plot <- ggpairs((raw_data),
+              aes(color = as.factor(classes$class)),
+              upper = list(continuous = 'points'),
+              legend = 1,
+              title = plot.title) +
+      theme(legend.position = 'bottom') +
+      labs(fill = "Species")
     print(plot)
   }
 }
 
 # Preprocessing, keep only continuous features
 data.full <- penguins[c('species',
-             'bill_length_mm',
-             'bill_depth_mm',
-             'flipper_length_mm',
-             'body_mass_g')]
+                        'bill_length_mm',
+                        'bill_depth_mm',
+                        'flipper_length_mm',
+                        'body_mass_g')]
 data.full <- na.omit(data.full)
 data.numeric <- data.full[, 2:5]
 
@@ -36,24 +41,24 @@ cov(data.numeric)
 corrplot(cor(data.numeric), method = 'color')
 
 # Groups are well separated, so the procedure should work well
-ggpairs(data.numeric, aes(color = data.full$species), upper = list(continuous = 'points'),legend=1) +
+ggpairs( data.numeric, aes(color = data.full$species), upper = list(continuous = 'points'), legend = 1) +
   theme(legend.position = 'top') +
-  labs(fill="Species")
+  labs(fill = "Species")
 
 # PCA, keep only 3 components which explain about 97% of variance
 data.pca <- prcomp(data.numeric, scale = TRUE)
 summary(data.pca)
 data.pca <- data.pca$x[, 1:3]
 
-ggpairs(data.pca, aes(color = data.full$species), upper = list(continuous = 'points'),legend=1) +
+ggpairs(data.pca, aes(color = data.full$species), upper = list(continuous = 'points'), legend = 1) +
   theme(legend.position = 'top') +
-  labs(fill="Species")
+  labs(fill = "Species")
 
 # The best solution has 3 components which coincide with real species
-out <- tclustIC( data.pca, numpool = 16, plot = TRUE, whichIC = "MIXMIX", kk = 1:5 )
-sol <- tclustICsol( out, plot = TRUE, Rand = TRUE, NumberOfBestSolutions = 3, whichIC = "MIXMIX")
+out <- tclustIC(data.pca, numpool = 16, plot = TRUE, whichIC = "MIXMIX", kk = 1:5)
+sol <- tclustICsol(out, plot = TRUE, Rand = TRUE, NumberOfBestSolutions = 3, whichIC = "MIXMIX")
 
-PlotSolutions(data.numeric,out,sol)
+PlotSolutions(data.numeric, out, sol)
 #About the other solutions:
 # 2. 4 groups found. Two of them have slightly different average values.
 #    By looking at he original species we can see that Adelie and Chinstrap are almost the same while Gentoo is split in two subspecies.
