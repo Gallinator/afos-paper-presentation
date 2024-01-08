@@ -35,6 +35,10 @@ cov(data.numeric)
 # High correlation between body_mass_g and flipper_length_mm
 corrplot(cor(data.numeric), method = 'color')
 
+ggpairs(data.numeric, aes(color = data.full$species), upper = list(continuous = 'points'),legend=1) +
+  theme(legend.position = 'top') +
+  labs(fill="Species")
+
 # PCA, keep only 3 components which explain about 97% of variance
 data.pca <- prcomp(data.numeric, scale = TRUE)
 summary(data.pca)
