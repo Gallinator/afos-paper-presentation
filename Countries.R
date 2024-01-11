@@ -73,7 +73,7 @@ data.pca <- prcomp(data, scale = TRUE)
 summary(data.pca)
 data.pca <- as.data.frame(data.pca$x[, 1:5])
 
-ggpairs(data.pca)
+ggpairs(data.pca,upper = list(continuous = 'points'),aes(color=rep(1,nrow(data.pca))))
 
 # Try with default parameters.
 out <- tclustIC(data.pca, whichIC = 'MIXMIX', plot = TRUE)
