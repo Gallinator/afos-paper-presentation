@@ -48,7 +48,7 @@ ggpairs( data.numeric, aes(color = data.full$species), upper = list(continuous =
 # PCA, keep only 3 components which explain about 97% of variance
 data.pca <- prcomp(data.numeric, scale = TRUE)
 summary(data.pca)
-data.pca <- data.pca$x[, 1:3]
+data.pca <- as.data.frame(data.pca$x[, 1:3])
 
 ggpairs(data.pca, aes(color = data.full$species), upper = list(continuous = 'points'), legend = 1) +
   theme(legend.position = 'top') +
