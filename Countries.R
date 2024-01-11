@@ -64,7 +64,7 @@ data <- Country_data[, 2:10]
 summary(data)
 cov(data)
 # High correlation between (life_expec, child_mort), (total_fer, child_mor), (gdpp, income), (total_fer, life_expec)
-corrplot(cor (data), method = 'color')
+corrplot(cor (data), method = 'color',type = 'lower')
 # Some outliers, won't be removed as we want to have a group for all countries
 boxplot(scale(data))
 
