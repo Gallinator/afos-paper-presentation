@@ -52,7 +52,8 @@ PlotSolutions <- function(raw_data, out, sol) {
       densities.plot <- densities.plot + plot.density(classes$class, raw_data, names(raw_data)[j])
     }
     
-    comb.plot <- map.plot / densities.plot + plot_annotation(title = paste("Solution", i, k, c))
+    comb.plot <- map.plot / densities.plot +
+      plot_annotation(title = paste("Solution", i, k, c),theme = theme(plot.title = element_text(hjust = 0.5)))
     print(comb.plot)
   }
 }
