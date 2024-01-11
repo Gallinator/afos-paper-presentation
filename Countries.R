@@ -29,7 +29,7 @@ PlotWorld <- function(world_geom, classes, merge_by = "region") {
   map <- ggplot(data = d, mapping = aes(x = long, y = lat, group = group)) +
     geom_polygon(data = world_geom) +
     geom_polygon(aes(fill = as.factor(class))) +
-    scale_fill_manual(name = "Class", values = class.colors) +
+    scale_fill_manual(name = "Group", values = class.colors) +
     geom_path() +
     theme(panel.grid = element_blank(), panel.background = element_rect(fill = 'white'))
   return(map)
