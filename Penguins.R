@@ -57,6 +57,7 @@ ggpairs(data.pca, aes(color = data.full$species), upper = list(continuous = 'poi
 # The best solution has 3 components which coincide with real species
 out <- tclustIC(data.pca, numpool = 16, plot = TRUE, whichIC = "MIXMIX", kk = 1:5)
 sol <- tclustICsol(out, plot = TRUE, Rand = TRUE, NumberOfBestSolutions = 3, whichIC = "MIXMIX")
+carbikeplot(sol,SpuriousSolutions = TRUE)
 
 PlotSolutions(data.numeric, out, sol)
 #About the other solutions:
