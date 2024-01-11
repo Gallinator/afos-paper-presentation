@@ -36,16 +36,17 @@ PlotSolutions <- function(raw_data, out, sol) {
   {
     k <- sol$MIXMIXbs[i, 1]
     c <- sol$MIXMIXbs[i, 2]
+    is.solution <- sol$MIXMIXbs[i, 5]
     classes <- as.data.frame(GetGroups(out,sol,k,c))
     colnames(classes)[1] <- "class"
     
-    plot.title <- paste("Solution", i,"k =", k ,"c =", c)
+    plot.title <- paste("Solution", i,"k =", k ,"c =", c, "solution =",is.solution)
     plot <- ggpairs((raw_data),
               aes(color = as.factor(classes$class)),
               upper = list(continuous = 'points'),
               legend = 1,
               title = plot.title) +
-      theme(legend.position = 'bottom') +
+      theme(legend.position = 'bottom',plot.title = element_text(hjust = 0.5)) +
       labs(fill = "Species")
     print(plot)
   }
