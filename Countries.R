@@ -6,7 +6,7 @@ library(patchwork)
 
 # Goal: group countries based on their development status to aid NGO funds allocation (more detail on the Kaggle page).
 # Data has been modified to correct some wrong values and to conform countries names to the geometry dataset ones.
-class.colors <- c("red", "orange", "yellow", "green", "blue", "purple")
+class.colors <- c("orangered", "orange","green4", "royalblue", "plum","yellow3")
 
 # Plot density for feature "colname" with values from "raw_data"
 PlotDensity <- function(classes, raw_data, colname) {
