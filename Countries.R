@@ -78,6 +78,7 @@ ggpairs(data.pca,upper = list(continuous = 'points'),aes(color=rep(1,nrow(data.p
 # Try with default parameters.
 out <- tclustIC(data.pca, whichIC = 'MIXMIX', plot = TRUE)
 sol <- tclustICsol(out, NumberOfBestSolutions = 2, plot = TRUE, whichIC = 'MIXMIX')
+carbikeplot(sol)
 
 # Not what we wanted. For example solution 1 puts countries like Russia and China together with African countries.
 # Those countries have on average low income, gdpp and life expectancy, therefore those two are definetly not belonging in this group.
