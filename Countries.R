@@ -41,8 +41,11 @@ PlotSolutions <- function(raw_data, out, sol) {
   {
     k <- paste("k=", sol$MIXMIXbs[i, 1], sep = '')
     c <- paste("c=", sol$MIXMIXbs[i, 2], sep = '')
+    is.solution <- sol$MIXMIXbs[i, 5]
     classes <- as.data.frame(out$IDXMIX[k, c])
     colnames(classes)[1] <- "class"
+    
+    plot.title<- paste("MIXMIX Solution", i,  k, c, "solution:", is.solution)
     
     map.plot<-PlotWorld(map_data("world"), classes, "region")
     
@@ -53,7 +56,7 @@ PlotSolutions <- function(raw_data, out, sol) {
     }
     
     comb.plot <- map.plot / densities.plot +
-      plot_annotation(title = paste("Solution", i, k, c),theme = theme(plot.title = element_text(hjust = 0.5)))
+      plot_annotation(title = plot.title,theme = theme(plot.title = element_text(hjust = 0.5)))
     print(comb.plot)
   }
 }
