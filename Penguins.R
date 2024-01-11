@@ -3,16 +3,23 @@ library(fsdaR)
 library(GGally)
 library(corrplot)
 
+# Returns a vector of groups for the solution with k and c
+GetGroups<-function(out, sol, k, c){
+  k <- paste("k=", k, sep = '')
+  c <- paste("c=", c, sep = '')
+  return(out$IDXMIX[[k, c]])
+}
+
 # Plot densities for each solution
 PlotSolutions <- function(raw_data, out, sol) {
   for (i in 1:nrow(sol$MIXMIXbs))
   {
-    k <- paste("k=", sol$MIXMIXbs[i, 1], sep = '')
-    c <- paste("c=", sol$MIXMIXbs[i, 2], sep = '')
-    classes <- as.data.frame(out$IDXMIX[k, c])
+    k <- sol$MIXMIXbs[i, 1]
+    c <- sol$MIXMIXbs[i, 2]
+    classes <- as.data.frame(GetGroups(out,sol,k,c))
     colnames(classes)[1] <- "class"
     
-    plot.title <- paste("Solution", i, k, c)
+    plot.title <- paste("Solution", i,"k =", k ,"c =", c)
     plot <- ggpairs((raw_data),
               aes(color = as.factor(classes$class)),
               upper = list(continuous = 'points'),
