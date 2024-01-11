@@ -10,6 +10,26 @@ GetGroups<-function(out, sol, k, c){
   return(out$IDXMIX[[k, c]])
 }
 
+# Calculate ARI for all solution with respect to original groups
+GetAri<-function(out,sol,raw_groups){
+  nsol<-nrow(sol$MIXMIXbs)
+  df<-data.frame(matrix(nrow = nsol,ncol = 3))
+  colnames(df)<-c("k","c","ARI")
+  
+  for (i in 1:nsol)
+  {
+    k<-sol$MIXMIXbs[i, 1]
+    c<-sol$MIXMIXbs[i, 2]
+    groups<-GetGroups(out,sol,k,c)
+    ari<-adjustedRandIndex(groups,as.factor(raw_groups))
+    df[i,1]<-k
+    df[i,2]<-c
+    df[i,3]<-ari
+  }
+  
+  return(df)
+}
+
 # Plot densities for each solution
 PlotSolutions <- function(raw_data, out, sol) {
   for (i in 1:nrow(sol$MIXMIXbs))
@@ -65,6 +85,9 @@ ggpairs(data.pca, aes(color = data.full$species), upper = list(continuous = 'poi
 out <- tclustIC(data.pca, numpool = 16, plot = TRUE, whichIC = "MIXMIX", kk = 1:5)
 sol <- tclustICsol(out, plot = TRUE, Rand = TRUE, NumberOfBestSolutions = 3, whichIC = "MIXMIX")
 carbikeplot(sol,SpuriousSolutions = TRUE)
+# Good performance with respect to the original groups for first and second solution
+ari <- GetAri(out,sol,unclass(data.full$species))
+ari
 
 PlotSolutions(data.numeric, out, sol)
 #About the other solutions:
