@@ -47,7 +47,7 @@ PlotSolutions <- function(raw_data, out, sol) {
               legend = 1,
               title = plot.title) +
       theme(legend.position = 'bottom',plot.title = element_text(hjust = 0.5)) +
-      labs(fill = "Species")
+      labs(fill = "Group")
     print(plot)
   }
 }
