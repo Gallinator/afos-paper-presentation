@@ -4,10 +4,23 @@ library(corrplot)
 library(maps)
 library(patchwork)
 library(ufs)
+library(ggplot2)
+
 
 # Goal: group countries based on their development status to aid NGO funds allocation (more detail on the Kaggle page).
 # Data has been modified to correct some wrong values and to conform countries names to the geometry dataset ones.
 class.colors <- c("orangered", "orange","green4", "royalblue", "plum","yellow3")
+
+PlotCumulativePCA <- function(pca.data) {
+  cumul.var <- cumsum(pca.data$sdev ^ 2 / (sum(pca.data$sdev ^ 2)))
+  cumul.var <- as.data.frame(cumul.var)
+  colnames(cumul.var)[1] <- "var"
+  cumul.var["pc"] <- as.factor(seq(1, ncol(data), 1))
+  ggplot(cumul.var, aes(x = pc, y = var, group = 1)) +
+    geom_line() +
+    geom_point() +
+    labs(x = "Principal component", y = "Cumulative variance explained")
+}
 
 BoxPlotWithNames<-function(countries,data){
   final.plot <- NULL
@@ -101,6 +114,7 @@ BoxPlotWithNames(Country_data$country,data)
 #PCA, keep 5 components which explain about 94% of variance
 data.pca <- prcomp(data, scale = TRUE)
 summary(data.pca)
+PlotCumulativePCA(data.pca)
 data.pca <- as.data.frame(data.pca$x[, 1:5])
 
 ggpairs(data.pca,upper = list(continuous = 'points'),aes(color=rep(1,nrow(data.pca))))
