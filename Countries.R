@@ -3,10 +3,36 @@ library(GGally)
 library(corrplot)
 library(maps)
 library(patchwork)
+library(ufs)
 
 # Goal: group countries based on their development status to aid NGO funds allocation (more detail on the Kaggle page).
 # Data has been modified to correct some wrong values and to conform countries names to the geometry dataset ones.
 class.colors <- c("orangered", "orange","green4", "royalblue", "plum","yellow3")
+
+BoxPlotWithNames<-function(countries,data){
+  final.plot <- NULL
+  for (c in 1:ncol(data)){
+    col<-colnames(data)[c]
+    
+    outliers<- iqrOutlier(data[[col]])
+    labels<-countries
+    labels[!outliers]<-as.numeric(NA)
+    d <- data
+    d["countries"]<-labels
+    d["group"]<-rep(1,nrow(data))
+
+    plot<-ggplot(d,aes_string(y=col,x="group"))+
+      geom_boxplot(width=0.5)+
+      geom_text(aes(label=countries),na.rm = TRUE,hjust = -.2,size=3)+
+      theme(axis.text.x=element_blank(),axis.title.x=element_blank(),axis.ticks.x=element_blank())
+    
+    if (is.null(final.plot))
+      final.plot<-plot
+    else
+      final.plot<-final.plot+plot
+  }
+  print(final.plot + plot_layout(nrow = 2))
+}
 
 # Plot density for feature "colname" with values from "raw_data"
 PlotDensity <- function(classes, raw_data, colname) {
@@ -69,7 +95,8 @@ cov(data)
 # High correlation between (life_expec, child_mort), (total_fer, child_mor), (gdpp, income), (total_fer, life_expec)
 corrplot(cor (data), method = 'color',type = 'lower')
 # Some outliers, won't be removed as we want to have a group for all countries
-boxplot(scale(data))
+BoxPlotWithNames(Country_data$country,data)
+
 
 #PCA, keep 5 components which explain about 94% of variance
 data.pca <- prcomp(data, scale = TRUE)
